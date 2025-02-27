@@ -29,3 +29,51 @@ public:
         return data;
     }
 };
+
+struct School
+{
+private:
+    string name;
+    string address;
+    string city;
+    string state;
+    string country;
+    School* next;
+};
+
+class SchoolList
+{
+    School* head;
+    School* tail;
+public:
+    void insertFirst(School school)
+    {
+
+    }
+
+    void insertLast(School school)
+    {
+
+    }
+
+    void deleteByName(string name)
+    {
+
+    }
+
+    School* findByName(string name)
+    {
+
+    }
+
+    void display()
+    {
+
+    }
+};
+
+int main()
+{
+
+    return 0;
+}
