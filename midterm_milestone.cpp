@@ -32,7 +32,6 @@ public:
 
 struct School
 {
-private:
     string name;
     string address;
     string city;
@@ -43,27 +42,80 @@ private:
 
 class SchoolList
 {
-    School* head;
-    School* tail;
+    School* head = nullptr;
+    School* tail = nullptr;
+    int length = 0;
 public:
-    void insertFirst(School school)
+    void insertFirst(School* school)
     {
-
+        if (head == nullptr) // empty list
+        {
+            head = school;
+            tail = school;
+            length++;
+        }
+        else
+        {
+            School* temp = head;
+            head = school;
+            head->next = temp;
+            length++;
+        }
     }
 
-    void insertLast(School school)
+    void insertLast(School* school)
     {
-
+        if (head == nullptr) // empty list
+        {
+            head = school;
+            tail = school;
+            length++;
+        }
+        else
+        {
+            School* temp = tail;
+            tail = school;
+            temp->next = school;
+            length++;
+        }
     }
 
     void deleteByName(string name)
     {
+        School* curr = head;
+        for (int i = 0; i < length; i++)
+        {
+            if (curr->next->name == name)
+            {
+                School* temp = curr->next;
+                curr->next = curr->next->next;
+                delete temp;
+            }
+            else
+            {
+                curr = curr->next;
+            }
+
+        }
 
     }
 
     School* findByName(string name)
     {
+        School* curr = head;
+        for (int i = 0; i < length; i++)
+        {
+            if (curr->name == name)
+            {
+                return curr;
+            }
+            else
+            {
+                curr = curr->next;
+            }
 
+        }
+        return nullptr;
     }
 
     void display()
@@ -74,6 +126,76 @@ public:
 
 int main()
 {
+    SchoolList list;
+
+    bool running = true;
+    int input = 0;
+    string schoolName;
+    while (running) {
+        cout << "Enter 1 to search for a school by name." << endl;
+        cout << "Enter 2 to delete a school by name." << endl;
+        cout << "Enter 0 to end program and see full list of schools." << endl;
+        // TODO parse input for int?
+        cin >> input; // get input from user
+
+
+        if (input == 0)
+        {
+            running = false;
+        }
+        else if (input == 1) // search for school by name
+        {
+            bool runningSearch = true;
+            while (runningSearch)
+            {
+                cout << "Enter a school name to search: ";
+                cin >> schoolName; // get input from user
+                if (schoolName == "") {
+                    cout << "Invalid input, try again." << endl;
+                }
+                else
+                {
+                    School* foundSchool = list.findByName(schoolName);
+                    if (foundSchool == nullptr)
+                    {
+                        cout << "School not found." << endl;
+                    }
+                    else
+                    {
+                        cout << foundSchool->name << "found. " << endl;
+                        cout << foundSchool->address << ", " << foundSchool->city << " " << foundSchool->state << ", " << foundSchool->country << endl;
+                        runningSearch = false;
+                    }
+                }
+            }
+
+        }
+        else if (input == 2) // delete school by name
+        {
+            bool runningDelete = true;
+            while (runningDelete)
+            {
+                cout << "Enter a school name to delete: ";
+                cin >> schoolName; // get input from user
+                if (schoolName == "") {
+                    cout << "Invalid input, try again." << endl;
+                }
+                else
+                {
+                    list.deleteByName(schoolName);
+
+                    runningDelete = false;
+                }
+            }
+        }
+        else
+        {
+            cout << "Invalid input. try again." << endl;
+        }
+        cout << endl;
+    }
+
+    list.display();
 
     return 0;
 }
