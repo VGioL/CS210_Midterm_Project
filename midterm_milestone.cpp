@@ -36,7 +36,7 @@ struct School
     string address;
     string city;
     string state;
-    string country;
+    string county;
     School* next;
 };
 
@@ -120,13 +120,39 @@ public:
 
     void display()
     {
+        School* curr = head;
+        for (int i = 0; i < length; i++)
+        {
+
+            cout << curr->name << ": " <<
+            curr->address << ", " <<
+            curr->city << " " <<
+            curr->state << ", " <<
+            curr->county << endl;
+
+            curr = curr->next;
+        }
 
     }
 };
 
 int main()
 {
+    // transpose .CVS to vector, and transpose vector to SchoolList object
+    CSVReader reader;
+    vector<vector<string>> vector = reader.readCSV("midterm_milestone.cvs");
     SchoolList list;
+    for(int i = 1; i < vector.capacity(); i++) // for every row except header row
+    {
+        School newSchool;
+        newSchool.name = vector[i][0];
+        newSchool.address = vector[i][1];
+        newSchool.city = vector[i][2];
+        newSchool.state = vector[i][3];
+        newSchool.county = vector[i][4];
+        list.insertFirst(&newSchool);
+
+    }
 
     bool running = true;
     int input = 0;
@@ -137,6 +163,7 @@ int main()
         cout << "Enter 0 to end program and see full list of schools." << endl;
         // TODO parse input for int?
         cin >> input; // get input from user
+        cout << endl;
 
 
         if (input == 0)
@@ -148,9 +175,13 @@ int main()
             bool runningSearch = true;
             while (runningSearch)
             {
-                cout << "Enter a school name to search: ";
+                cout << "Enter a school name to search or 0 to quit: ";
                 cin >> schoolName; // get input from user
-                if (schoolName == "") {
+                if (schoolName == "0")
+                {
+                    break;
+                }
+                else if (schoolName == "") {
                     cout << "Invalid input, try again." << endl;
                 }
                 else
@@ -163,7 +194,7 @@ int main()
                     else
                     {
                         cout << foundSchool->name << "found. " << endl;
-                        cout << foundSchool->address << ", " << foundSchool->city << " " << foundSchool->state << ", " << foundSchool->country << endl;
+                        cout << foundSchool->address << ", " << foundSchool->city << " " << foundSchool->state << ", " << foundSchool->county << endl;
                         runningSearch = false;
                     }
                 }
@@ -175,9 +206,13 @@ int main()
             bool runningDelete = true;
             while (runningDelete)
             {
-                cout << "Enter a school name to delete: ";
+                cout << "Enter a school name to delete or 0 to quit: ";
                 cin >> schoolName; // get input from user
-                if (schoolName == "") {
+                if (schoolName == "0")
+                {
+                    break;
+                }
+                else if (schoolName == "") {
                     cout << "Invalid input, try again." << endl;
                 }
                 else
