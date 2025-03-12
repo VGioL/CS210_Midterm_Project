@@ -3,6 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <stack>
 using namespace std;
 
 class CSVReader {
@@ -148,25 +149,36 @@ class SchoolBST
 public:
     void insert(School* school)
     {
-        insertHelper(root, school);
+        if (root == nullptr)
+        {
+            root = school;
+        }
+        else
+        {
+            insertHelper(root, school);
+        }
     }
 private:
     void insertHelper(School* currNode, School* school)
     {
-        if (currNode == nullptr)
-        {
-            currNode = school;
-            //currNode->left = nullptr;
-            //currNode->right = nullptr;
-        }
-        else
+        if (currNode != nullptr)
         {
             if (school->name < currNode->name)
             {
+                if (currNode->left == nullptr)
+                {
+                    currNode->left = school;
+                    return;
+                }
                 currNode = currNode->left;
             }
             else
             {
+                if (currNode->right == nullptr)
+                {
+                    currNode->right = school;
+                    return;
+                }
                 currNode = currNode->right;
             }
             insertHelper(currNode, school);
@@ -201,6 +213,60 @@ private:
         }
 
         return findByNameHelper(currNode, school);
+
+    }
+
+public:
+    void displayInOrder()
+    {
+        stack<School*> visited;
+
+
+    }
+
+    void displayPreOrder()
+    {
+        cout << "Preorder" << endl;
+        stack<School*> visited;
+        visited.push(root);
+        /*displayPreOrderHelper(&visited);*/
+        while (visited.size() != 0)
+        {
+            School* curr = visited.top();
+            if (curr != nullptr) {
+                cout << curr->name << endl;
+                visited.pop();
+                visited.push(curr->right);
+                visited.push(curr->left);
+            }
+            else
+            {
+                visited.pop();
+            }
+        }
+    }
+/*private:
+    void displayPreOrderHelper(stack<School*>* visited)
+    {
+        School* curr = visited->top();
+        if (curr != nullptr) {
+            cout << curr->name;
+            visited->pop();
+            visited->push(curr->right);
+            visited->push(curr->left);
+            displayPreOrderHelper(visited);
+            displayPreOrderHelper(visited);
+        }
+        else
+        {
+            visited->pop();
+        }
+    }*/
+
+    void displayPostOrder()
+    {
+        stack<School*> visited;
+
 
     }
 
@@ -288,7 +354,7 @@ int main()
                 }
                 else
                 {
-                    bst.deleteByName(schoolName);
+                    //bst.deleteByName(schoolName);
 
                     runningDelete = false;
                 }
@@ -301,7 +367,9 @@ int main()
         cout << endl;
     }
 
-    bst.display();
+    //bst.displayInOrder();
+    bst.displayPreOrder();
+    //bst.displayPostOrder();
 
     return 0;
 }
