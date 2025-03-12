@@ -37,10 +37,12 @@ struct School
     string city;
     string state;
     string county;
-    School* next;
+    /*School* next;*/
+    School* left = nullptr;
+    School* right = nullptr;
 };
 
-class SchoolList
+/*class SchoolList
 {
     School* head = nullptr;
     School* tail = nullptr;
@@ -134,7 +136,47 @@ public:
         }
 
     }
+};*/
+
+
+/// BST
+
+class SchoolBST
+{
+    School* root = nullptr;
+
+    void insert(School* school)
+    {
+        insertHelper(root, school);
+    }
+private:
+    void insertHelper(School* currNode, School* school)
+    {
+        if (currNode == nullptr)
+        {
+            currNode = school;
+            //currNode->left = nullptr;
+            //currNode->right = nullptr;
+        }
+        else
+        {
+            if (school->name < currNode->name)
+            {
+                currNode = currNode->left;
+            }
+            else
+            {
+                currNode = currNode->right;
+            }
+            insertHelper(currNode, school);
+        }
+    }
+
+
 };
+
+
+
 
 int main()
 {
