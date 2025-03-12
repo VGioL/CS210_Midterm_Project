@@ -3,6 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <stack>
 using namespace std;
 
 class CSVReader {
@@ -37,10 +38,12 @@ struct School
     string city;
     string state;
     string county;
-    School* next;
+    /*School* next;*/
+    School* left = nullptr;
+    School* right = nullptr;
 };
 
-class SchoolList
+/*class SchoolList
 {
     School* head = nullptr;
     School* tail = nullptr;
@@ -134,14 +137,151 @@ public:
         }
 
     }
+};*/
+
+
+/// BST
+
+class SchoolBST
+{
+    School* root = nullptr;
+
+public:
+    void insert(School* school)
+    {
+        if (root == nullptr)
+        {
+            root = school;
+        }
+        else
+        {
+            insertHelper(root, school);
+        }
+    }
+private:
+    void insertHelper(School* currNode, School* school)
+    {
+        if (currNode != nullptr)
+        {
+            if (school->name < currNode->name)
+            {
+                if (currNode->left == nullptr)
+                {
+                    currNode->left = school;
+                    return;
+                }
+                currNode = currNode->left;
+            }
+            else
+            {
+                if (currNode->right == nullptr)
+                {
+                    currNode->right = school;
+                    return;
+                }
+                currNode = currNode->right;
+            }
+            insertHelper(currNode, school);
+        }
+    }
+
+public:
+    School* findByName(string school)
+    {
+        return findByNameHelper(root, school);
+    }
+private:
+    School* findByNameHelper(School* currNode, string school)
+    {
+        if (currNode == nullptr)
+        {
+            return nullptr;
+        }
+
+        if (school == currNode->name)
+        {
+            return currNode;
+        }
+
+        if (school < currNode->name)
+        {
+            currNode = currNode->left;
+        }
+        else
+        {
+            currNode = currNode->right;
+        }
+
+        return findByNameHelper(currNode, school);
+
+    }
+
+public:
+    void displayInOrder()
+    {
+        cout << "Inorder" << endl;
+        stack<School*> visited;
+        visited.push(root);
+        while (visited.size() != 0)
+        {
+            School* curr = visited.top();
+            visited.pop();
+            if (curr != nullptr) {
+                visited.push(curr->right);
+                cout << curr->name << endl;
+                visited.push(curr->left);
+            }
+        }
+
+    }
+
+    void displayPreOrder()
+    {
+        cout << "Preorder" << endl;
+        stack<School*> visited;
+        visited.push(root);
+        while (visited.size() != 0)
+        {
+            School* curr = visited.top();
+            visited.pop();
+            if (curr != nullptr) {
+                cout << curr->name << endl;
+                visited.push(curr->right);
+                visited.push(curr->left);
+            }
+        }
+    }
+
+    void displayPostOrder()
+    {
+        cout << "Preorder" << endl;
+        stack<School*> visited;
+        visited.push(root);
+        while (visited.size() != 0)
+        {
+            School* curr = visited.top();
+            visited.pop();
+            if (curr != nullptr) {
+                visited.push(curr->right);
+                visited.push(curr->left);
+                cout << curr->name << endl;
+            }
+        }
+
+
+    }
+
 };
+
+
+
 
 int main()
 {
     // transpose .CVS to vector, and transpose vector to SchoolList object
     CSVReader reader;
     vector<vector<string>> vector = reader.readCSV("midterm_milestone.csv");
-    SchoolList list;
+    SchoolBST bst;
     for(int i = 1; i < vector.size(); i++) // for every row except header row
     {
         School *newSchool = new School();
@@ -150,7 +290,7 @@ int main()
         newSchool->city = vector[i][2];
         newSchool->state = vector[i][3];
         newSchool->county = vector[i][4];
-        list.insertFirst(newSchool);
+        bst.insert(newSchool);
     }
 
     bool running = true;
@@ -183,7 +323,7 @@ int main()
                 }
                 else
                 {
-                    School* foundSchool = list.findByName(schoolName);
+                    School* foundSchool = bst.findByName(schoolName);
                     if (foundSchool == nullptr)
                     {
                         cout << "School not found." << endl;
@@ -215,7 +355,7 @@ int main()
                 }
                 else
                 {
-                    list.deleteByName(schoolName);
+                    //bst.deleteByName(schoolName);
 
                     runningDelete = false;
                 }
@@ -228,7 +368,9 @@ int main()
         cout << endl;
     }
 
-    list.display();
+    bst.displayInOrder();
+    bst.displayPreOrder();
+    bst.displayPostOrder();
 
     return 0;
 }
