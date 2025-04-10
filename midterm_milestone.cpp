@@ -38,11 +38,16 @@ struct School
     string city;
     string state;
     string county;
+
+    // for SchoolList
     /*School* next;*/
-    School* left = nullptr;
-    School* right = nullptr;
+
+    // for SchoolBST
+    /*School* left = nullptr;
+    School* right = nullptr;*/
 };
 
+// List
 /*class SchoolList
 {
     School* head = nullptr;
@@ -139,10 +144,8 @@ public:
     }
 };*/
 
-
 /// BST
-
-class SchoolBST
+/*class SchoolBST
 {
     School* root = nullptr;
 
@@ -217,10 +220,26 @@ private:
     }
 
 public:
+    void deleteByName(string school)
+    {
+
+    }
+
     void displayInOrder()
     {
+        cout << "Inorder" << endl;
         stack<School*> visited;
-
+        visited.push(root);
+        while (visited.size() != 0)
+        {
+            School* curr = visited.top();
+            visited.pop();
+            if (curr != nullptr) {
+                visited.push(curr->right);
+                cout << curr->name << endl;
+                visited.push(curr->left);
+            }
+        }
 
     }
 
@@ -229,50 +248,99 @@ public:
         cout << "Preorder" << endl;
         stack<School*> visited;
         visited.push(root);
-        /*displayPreOrderHelper(&visited);*/
         while (visited.size() != 0)
         {
             School* curr = visited.top();
+            visited.pop();
             if (curr != nullptr) {
                 cout << curr->name << endl;
-                visited.pop();
                 visited.push(curr->right);
                 visited.push(curr->left);
             }
-            else
-            {
-                visited.pop();
-            }
         }
     }
-/*private:
-    void displayPreOrderHelper(stack<School*>* visited)
-    {
-        School* curr = visited->top();
-        if (curr != nullptr) {
-            cout << curr->name;
-            visited->pop();
-            visited->push(curr->right);
-            visited->push(curr->left);
-            displayPreOrderHelper(visited);
-            displayPreOrderHelper(visited);
-        }
-        else
-        {
-            visited->pop();
-        }
-    }*/
 
     void displayPostOrder()
     {
+        cout << "Preorder" << endl;
         stack<School*> visited;
+        visited.push(root);
+        while (visited.size() != 0)
+        {
+            School* curr = visited.top();
+            visited.pop();
+            if (curr != nullptr) {
+                visited.push(curr->right);
+                visited.push(curr->left);
+                cout << curr->name << endl;
+            }
+        }
 
 
     }
 
+};*/
+
+
+class SchoolHashTable
+{
+    const static int TABLE_SIZE = 100;
+    School table[TABLE_SIZE];
+public:
+    void insert(School school)
+    {
+        int index = hashFunction(school.name, TABLE_SIZE);
+
+        if (table[index].name != "") // if there is a school already at calculated index:
+        {
+            table[collision(index)] = school;
+        }
+        else
+        {
+            table[index] = school;
+        }
+
+    }
+private:
+    int hashFunction(string key, int tableSize) {
+        int hash = 0;
+        for (char ch : key) {
+            hash += ch;
+        }
+        return hash % tableSize;
+    }
+
+    // handle collisions with linear probing
+    int collision(int index)
+    {
+        index++;
+        if (table[index].name != "") // if there is a school already at calculated index:
+        {
+            return collision(index); // recursion step
+        }
+        else
+        {
+            return index;
+        }
+
+    }
+
+public:
+    void deleteByName(string name)
+    {
+
+    }
+
+    School findByName(string name)
+    {
+
+    }
+
+    void display()
+    {
+
+    }
 };
-
-
 
 
 int main()
@@ -354,7 +422,7 @@ int main()
                 }
                 else
                 {
-                    //bst.deleteByName(schoolName);
+                    bst.deleteByName(schoolName);
 
                     runningDelete = false;
                 }
@@ -367,9 +435,9 @@ int main()
         cout << endl;
     }
 
-    //bst.displayInOrder();
+    bst.displayInOrder();
     bst.displayPreOrder();
-    //bst.displayPostOrder();
+    bst.displayPostOrder();
 
     return 0;
 }
