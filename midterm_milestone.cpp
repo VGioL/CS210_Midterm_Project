@@ -313,6 +313,7 @@ private:
     // handle collisions with linear probing
     int collision(int index)
     {
+        // TODO handle array wraparound and notfound break condition (reaches initial index again? i dont need to specify the types of empty indexes with linear probing do i?)
         index++;
         if (table[index].name != "") // if there is a school already at calculated index:
         {
@@ -322,7 +323,6 @@ private:
         {
             return index;
         }
-
     }
 
 public:
@@ -333,8 +333,32 @@ public:
 
     School findByName(string name)
     {
-
+        int index = hashFunction(name, TABLE_SIZE);
+        return findByNameHelper(name, index, index);
     }
+private:
+    School findByNameHelper(string name, int index, int initialIndex)
+    {
+        // TODO: same as todo above, need to account for notfound condition and array wraparound
+        if (table[index].name == name) // school found at initial index
+        {
+            return table[index];
+        }
+        else
+        {
+            if (index == TABLE_SIZE - 1) // reached end of table
+            {
+                index = 0; // wraparound
+            }
+            if (index == initialIndex)
+            {
+                // TODO: notfound return value
+            }
+            index
+
+        }
+    }
+public:
 
     void display()
     {
